@@ -1,15 +1,10 @@
-function convertAFolder()
+function convertAFolder(folderName, outputFileName)
 %CONVERTAFOLDER reads all files of the selected folder and writes the
 %converted data into a single file.
 
-folderName = uigetdir('C:/');
 if(ischar(folderName))
-    [outputFileName, outputPathName] = uiputfile('*.csv', 'Save As');
     if(ischar(outputFileName))
-        outputFile = fopen([outputPathName, outputFileName], 'a');
-        if(~ischar(outputFileName))
-            return;
-        end
+        outputFile = fopen(outputFileName, 'w');
         fprintf(outputFile, 'seqn,paxstat,paxcal,paxday,paxn,paxhour,paxhour_rel,paxminut,paxinten,paxinten_ax1,paxinten_ax2,paxinten_ax3,paxstep\n');
         h = waitbar(0, 'Converting...');
         pause(1);
@@ -21,6 +16,7 @@ if(ischar(folderName))
             convertASignleFile_dataset([folderName, '/', inputFileName], outputFile);
         end
         waitbar(1, h, 'Converting completed...');
+        fclose(outputFile);
         pause(1);
         close(h);
     end
